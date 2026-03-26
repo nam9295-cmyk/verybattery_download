@@ -34,29 +34,53 @@
 
     <!-- Structured Data (JSON-LD) for SEO -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "VeryBattery",
-      "operatingSystem": "macOS",
-      "applicationCategory": "UtilitiesApplication",
-      "description": "The most elegant way to preserve your Mac's battery health.",
-      "author": {
-        "@type": "Organization",
-        "name": "VeryGood Chocolate",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Daegu",
-          "addressCountry": "KR"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "VeryBattery",
+        "operatingSystem": "macOS",
+        "applicationCategory": "UtilitiesApplication",
+        "description": "The most elegant way to preserve your Mac's battery health with intelligent charge limits and thermal protection.",
+        "author": {
+          "@type": "Organization",
+          "name": "VeryGood Chocolate",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Daegu",
+            "addressCountry": "KR"
+          },
+          "url": "https://verygood-chocolate.com"
         },
-        "url": "https://verygood-chocolate.com"
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
       },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "왜 맥 배터리 충전을 80%로 제한해야 하나요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "리튬 이온 배터리는 100% 완충 상태를 오래 유지할 경우 화학적 스트레스가 발생합니다. 80%로 제한하면 배터리 노화를 늦추고 수명을 획기적으로 연장할 수 있습니다."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "VeryBattery의 세일링(Sailing) 모드란 무엇인가요?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "충전기를 연결한 상태에서도 배터리를 아주 조금씩 방전시켰다가 다시 충전하는 자연스러운 사이클을 만들어, 배터리 셀이 고착되는 것을 방지하는 기능입니다."
+            }
+          }
+        ]
       }
-    }
+    ]
     </script>
     <style>
         :root {
@@ -70,6 +94,41 @@
             --glass-bg: rgba(255, 255, 255, 0.7);
             --card-bg: #FFFFFF;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        /* ... existing styles ... */
+
+        /* FAQ Section */
+        .faq {
+            padding: 120px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq h2 {
+            font-size: 32px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .faq-item {
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(27, 48, 34, 0.1);
+            padding-bottom: 24px;
+        }
+
+        .faq-item h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .faq-item p {
+            font-size: 16px;
+            color: rgba(27, 48, 34, 0.7);
+            line-height: 1.7;
         }
 
         * {
@@ -410,7 +469,7 @@
 <body>
 
     <header>
-        <a href="#" class="logo">🍫 VeryBattery</a>
+        <a href="#" class="logo" aria-label="VeryBattery Home">🍫 VeryBattery</a>
         <!-- Korean Comment: 직통 다운로드 버튼 -->
         <a href="https://github.com/nam9295-cmyk/verybattery/releases/download/v1.0.0/VeryBattery_v1.0.dmg" class="nav-btn">Download</a>
     </header>
@@ -433,7 +492,7 @@
                         2. Name it 'video.mp4' and place it in this folder.
                         3. The video will autoplay, loop, and be muted (standard for landing pages).
                     -->
-                    <video autoplay muted loop playsinline poster="screenshot.png" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block;">
+                    <video autoplay muted loop playsinline poster="screenshot.png" title="VeryBattery App Interface Demo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block;">
                         <source src="video.mp4" type="video/mp4">
                         <!-- Fallback content if video/screenshot are missing -->
                         <div class="app-window" id="fallback-mockup">
@@ -491,6 +550,23 @@
                     you in the flow.</p>
             </div>
         </section>
+
+        <section class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>왜 맥 배터리 충전을 80%로 제한해야 하나요?</h3>
+                <p>리튬 이온 배터리는 100% 완충 상태를 오래 유지하거나 고온에 노출될 때 화학적 스트레스가 가장 큽니다. VeryBattery는 이를 80%로 제한하여 배터리 노화를 늦추고 건강한 상태를 더 오래 유지하도록 돕습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>VeryBattery의 세일링(Sailing) 모드란 무엇인가요?</h3>
+                <p>배터리가 특정 퍼센트에 가만히 멈춰있는 것보다, 아주 느리고 자연스럽게 방전되었다가 다시 충전되는 과정(Sailing)을 거치는 것이 배터리 셀의 활성도를 유지하는 데 더 유리합니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>stay_cool 기능은 어떻게 작동하나요?</h3>
+                <p>무거운 작업(영상 편집, 디자인) 시 맥의 온도가 올라가면 충전 과정에서 발생하는 열이 배터리에 치명적일 수 있습니다. VeryBattery는 온도를 모니터링하여 뜨거워지면 충전을 잠시 멈춰 배터리를 보호합니다.</p>
+            </div>
+        </section>
+
         <section id="brand-story">
             <div class="brand-container">
                 <div class="brand-content">
