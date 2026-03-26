@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeryBattery — Elegant Mac Battery Management</title>
+    <style>
+        :root {
+            /* Boutique Chocolate Palette */
+            --bg-color: #F9F7F2;
+            /* Warm Beige - 배경색 */
+            --text-primary: #1B3022;
+            /* Deep Green - 기본 텍스트 및 로고 */
+            --accent-green: #2D5A27;
+            /* Accent Green - 강조색 */
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --card-bg: #FFFFFF;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(27, 48, 34, 0.05);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-btn {
+            background-color: var(--text-primary);
+            color: var(--bg-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Hero Area */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 100px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            max-width: 900px;
+            margin-bottom: 40px;
+            /* Korean: 맥 배터리를 보호하는 가장 우아한 방법. */
+        }
+
+        .hero-cta {
+            margin-bottom: 80px;
+        }
+
+        .btn-large {
+            background-color: var(--text-primary);
+            color: var(--bg-color);
+            padding: 18px 36px;
+            border-radius: 32px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .btn-large:hover {
+            transform: scale(1.02);
+        }
+
+        /* App Screenshot Rendering Area */
+        .screenshot-container {
+            width: 100%;
+            max-width: 400px; /* Reduced width for vertical video */
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+
+        .screenshot-mockup {
+            background: var(--card-bg);
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(27, 48, 34, 0.1);
+            aspect-ratio: 9 / 16; /* Fixed to 9:16 */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 6px solid #E8E2D9; /* Soft beige-grey border for a natural device frame */
+        }
+
+        /* Removed green overlay pseudo-element */
+
+        .app-window {
+            position: relative;
+            background: var(--bg-color);
+            width: 280px;
+            height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .app-card {
+            background: rgba(27, 48, 34, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+        }
+
+        .toggle-switch {
+            width: 32px;
+            height: 18px;
+            background: var(--text-primary);
+            border-radius: 9px;
+            position: relative;
+        }
+
+        .toggle-switch::after {
+            content: "";
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Features */
+        .features {
+            padding: 120px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: var(--accent-green);
+        }
+
+        .feature-item h3 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .feature-item p {
+            font-size: 16px;
+            color: rgba(27, 48, 34, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 40px;
+            border-top: 1px solid rgba(27, 48, 34, 0.05);
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: rgba(27, 48, 34, 0.6);
+        }
+
+        .footer-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 24px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            header {
+                padding: 0 20px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        /* Brand Story Section */
+        #brand-story {
+            padding: 120px 40px;
+            background-color: #F2EEE6;
+            /* Slightly deeper beige for the story section */
+            border-top: 1px solid rgba(27, 48, 34, 0.05);
+            border-bottom: 1px solid rgba(27, 48, 34, 0.05);
+        }
+
+        .brand-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .brand-label {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-green);
+            margin-bottom: 24px;
+        }
+
+        #brand-story h2 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+            margin-bottom: 32px;
+        }
+
+        #brand-story p {
+            font-size: 20px;
+            color: rgba(27, 48, 34, 0.8);
+            line-height: 1.8;
+            margin-bottom: 48px;
+            word-break: keep-all;
+        }
+
+        .brand-link {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 2px solid var(--text-primary);
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-link:hover {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+            padding-left: 8px;
+        }
+
+        .signature {
+            margin-top: 80px;
+            font-family: serif;
+            font-style: italic;
+            font-size: 24px;
+            color: var(--text-primary);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">🍫 VeryBattery</a>
+        <!-- Korean Comment: 직통 다운로드 버튼 -->
+        <a href="https://github.com/nam9295-cmyk/verybattery/releases/download/v1.0.0/VeryBattery_v1.0.dmg" class="nav-btn">Download</a>
+    </header>
+
+    <main>
+        <section class="hero">
+            <!-- Korean: 맥 배터리를 보호하는 가장 우아한 방법. -->
+            <h1>The most elegant way to preserve your Mac's battery.</h1>
+
+            <div class="hero-cta">
+                <!-- Korean: v1.0.0 직통 다운로드 -->
+                <a href="https://github.com/nam9295-cmyk/verybattery/releases/download/v1.0.0/VeryBattery_v1.0.dmg" class="btn-large">Download v1.0.0</a>
+            </div>
+
+            <div class="screenshot-container">
+                <div class="screenshot-mockup">
+                    <!-- 
+                        Video Implementation:
+                        1. Compress your video to ~3-5MB.
+                        2. Name it 'video.mp4' and place it in this folder.
+                        3. The video will autoplay, loop, and be muted (standard for landing pages).
+                    -->
+                    <video autoplay muted loop playsinline poster="screenshot.png" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px; display: block;">
+                        <source src="video.mp4" type="video/mp4">
+                        <!-- Fallback content if video/screenshot are missing -->
+                        <div class="app-window" id="fallback-mockup">
+                            <div class="app-header">
+                                <span style="font-weight: 800; font-size: 14px;">VeryBattery</span>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="app-card" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Charge Limit: 80%</span>
+                                <div class="toggle-switch"></div>
+                            </div>
+                            <div class="app-card">
+                                <div style="margin-bottom: 8px; opacity: 0.6;">Current Status</div>
+                                <div style="font-size: 24px; font-weight: 700;">78% <span style="font-size: 14px; font-weight: 400;">Sailing</span></div>
+                            </div>
+                            <div class="app-card">
+                                <div style="margin-bottom: 8px; opacity: 0.6;">Temperature</div>
+                                <div style="font-size: 18px; font-weight: 600;">32°C <span style="color: var(--accent-green); font-size: 12px;">Cool</span></div>
+                            </div>
+                        </div>
+                    </video>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="features">
+            <!-- stay_cool feature -->
+            <div class="feature-item">
+                <div class="feature-icon">❄️</div>
+                <!-- Korean: 더 시원하게 (stay_cool) -->
+                <h3>stay_cool</h3>
+                <!-- Korean: 렌더링이나 디자인 작업 시 맥이 뜨거워지면 충전을 지능적으로 멈춰 배터리 스트레스를 줄입니다. -->
+                <p>Thermal protection that intelligently pauses charging when your Mac heats up during intense creative
+                    sessions.</p>
+            </div>
+
+            <!-- smart_limit feature -->
+            <div class="feature-item">
+                <div class="feature-icon">🛡️</div>
+                <!-- Korean: 스마트한 제한 (smart_limit) -->
+                <h3>smart_limit</h3>
+                <!-- Korean: 배터리 수명에 최적인 80% 충전 제한과 자연스러운 방전을 유도하는 세일링 모드를 제공합니다. -->
+                <p>Maintain your battery at the health-optimal 80% limit with an advanced sailing mode that mimics
+                    natural cycles.</p>
+            </div>
+
+            <!-- flow_focus feature -->
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <!-- Korean: 몰입을 위한 자동화 (flow_focus) -->
+                <h3>flow_focus</h3>
+                <!-- Korean: 특정 앱 실행 시 자동으로 풀충전을 활성화하여, 작업 흐름이 끊기지 않도록 배려합니다. -->
+                <p>Custom automation rules that trigger full charging based on your active professional apps, keeping
+                    you in the flow.</p>
+            </div>
+        </section>
+        <section id="brand-story">
+            <div class="brand-container">
+                <div class="brand-content">
+                    <!-- Korean: 브랜드 스토리 헤더 -->
+                    <span class="brand-label">Handcrafted by a Designer</span>
+                    <!-- Korean: 초콜릿 부티크에서 빚어낸 정성 -->
+                    <h2>Crafted with Care in a Chocolate Boutique</h2>
+                    <!-- Korean: 브랜드 소개 문구 -->
+                    <p>
+                        VeryBattery was born in <strong>VeryGood Chocolate</strong>, a chocolate boutique located in
+                        Daegu, South Korea.
+                        We believe that software should be as refined and delightful as a well-tempered piece of
+                        chocolate.
+                        대구의 작은 초콜릿 작업실에서 시작된 이 프로젝트는, 기술의 정밀함과 공예의 따뜻함을 동시에 담았습니다.
+                    </p>
+
+                    <div class="brand-actions">
+                        <!-- Korean: 베리굿 초콜릿 웹사이트 링크 -->
+                        <a href="https://verygood-chocolate.com" target="_blank" class="brand-link">Visit veryGood
+                            Chocolate ↗</a>
+                    </div>
+
+                    <!-- Korean: 시그니처 문구 -->
+                    <div class="signature">Designed by John</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-info">
+            <!-- Korean: BerryGood Chocolate의 John이 만든 프로젝트 -->
+            A project by John at VeryGood Chocolate
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/nam9295-cmyk/VeryBattery">GitHub</a>
+        </div>
+    </footer>
+
+</body>
+
+</html>
